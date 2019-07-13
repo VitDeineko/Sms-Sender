@@ -1,0 +1,139 @@
+package code;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+
+public class MailServlet extends HttpServlet {
+
+    private static String USER_NAME = "VitDeineko";
+    private static String PASSWORD = "1234";
+    private static String RECIPIENT1 = "vit.deineko@gmail.com";
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+
+            String email = request.getParameter("txtMail");
+            String subject = request.getParameter("txtSubject");
+            String messageText = request.getParameter("txtBody");
+            String from = USER_NAME;
+            String pass = PASSWORD;
+            String[] to = {email, RECIPIENT1};
+
+            if (email != null && email.length() > 0) {
+                sendFromGMail(from, pass, to, subject, messageText);
+
+                SessionFactory mFctory;
+                try {
+                    mFctory = new Configuration().configure().buildSessionFactory();
+                } catch (Throwable ex) {
+                    System.err.println("Couldn't create session factory." + ex);
+                    throw new ExceptionInInitializerError(ex);
+                }
+                org.hibernate.Session session = mFctory.openSession();
+                Transaction tx = null;
+                Integer ID = null;
+
+                String messagetext = "test";
+
+                try {
+                    tx = session.beginTransaction();
+                    MailLog maillog = new MailLog(email, messagetext);
+                    ID = (Integer) session.save(maillog);
+                    tx.commit();
+                } catch (Exception e) {
+                    if (tx != null) {
+                        tx.rollback();
+                    }
+                    e.printStackTrace();
+                } finally {
+                    session.close();
+                }
+            }
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet MailServlet</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Письмо отправлено на EMail  " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    private static void sendFromGMail(String from,
+            String pass, String[] to, String subject, String body) {
+        Properties props = System.getProperties();
+        String host = "smtp.gmail.com";
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.user", from);
+        props.put("mail.smtp.password", pass);
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+
+        Session session = Session.getDefaultInstance(props);
+        MimeMessage message = new MimeMessage(session);
+
+        try {
+            message.setFrom(new InternetAddress(from));
+            InternetAddress[] toAddress = new InternetAddress[to.length];
+
+            // To get the array of addresses
+            for (int i = 0; i < to.length; i++) {
+                toAddress[i] = new InternetAddress(to[i]);
+            }
+
+            for (int i = 0; i < toAddress.length; i++) {
+                message.addRecipient(Message.RecipientType.TO, toAddress[i]);
+            }
+
+            message.setSubject(subject);
+            message.setText(body);
+            Transport transport = session.getTransport("smtp");
+            transport.connect(host, from, pass);
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+        } catch (AddressException ae) {
+            ae.printStackTrace();
+        } catch (MessagingException me) {
+            me.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
