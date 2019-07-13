@@ -6,16 +6,16 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Рассылка сообщений</h1>
-        <h2>e-mail должен быть задан</h2> 
+        <h1>Р Р°СЃСЃС‹Р»РєР° СЃРѕРѕР±С‰РµРЅРёР№</h1>
+        <h2>e-mail РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</h2> 
 
 
         <form method="GET" action="mailservlet">
-            Введите e-mail
+            Р’РІРµРґРёС‚Рµ e-mail
             <input type="text" id="txtMail" name="txtMail" >
-            Введите phone
+            Р’РІРµРґРёС‚Рµ phone
             <input type="text" id="txtSubject" name =txtSubject>
-            Введите текст сообщения:
+            Р’РІРµРґРёС‚Рµ С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ:
             <input type="text" id="txtBody" name =txtBody>
             <input type="submit" value="Send">
         </form>
