@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
-
-        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
-
-        <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:D:Vitalii\DataBase\test_exam.db</property>
-        <property name="hibernate.connection.password"></property>
-        <property name="hibernate.connection.username"></property>
-        <property name="hibernate.dialect">code.SQLiteDialect</property>
-        <property name="show_sql">true</property>
-      
-        <mapping class="code.MailLog"/>
-        
-    </session-factory>
+  <session-factory>
+    <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+    <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
+    <property name="hibernate.connection.url">jdbc:sqlite:E:\java\test.db</property>
+    <property name="hibernate.connection.password"/>
+    <property name="hibernate.connection.username"/>
+    <property name="hibernate.dialect">hibernatesingletablexmlmapingtest.SQLiteDialect</property>
+    <property name="show_sql">true</property>
+  
+    <mapping resource="hibernatesingletablexmlmapingtest/Employee.hbm.xml"/>
+  
+  </session-factory>
 </hibernate-configuration>
