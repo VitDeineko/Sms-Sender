@@ -1,0 +1,23 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Рассылка сообщений</h1>
+        <h2>e-mail должен быть задан</h2> 
+
+
+        <form method="GET" action="mailservlet">
+            Введите e-mail
+            <input type="text" id="txtMail" name="txtMail" >
+            Введите phone
+            <input type="text" id="txtSubject" name =txtSubject>
+            Введите текст сообщения:
+            <input type="text" id="txtBody" name =txtBody>
+            <input type="submit" value="Send">
+        </form>
+    </body>
+</html>
